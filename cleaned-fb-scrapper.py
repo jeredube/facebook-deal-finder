@@ -54,8 +54,6 @@ days_listed = 7
 MAX_SCROLLS = 4
 
 
-
-
 # Setup base URL
 url = f'https://www.facebook.com/marketplace/{city}/search?query={product}&minPrice={min_price}&maxPrice={max_price}&daysSinceListed={days_listed}&sortBy=creation_time_descend&exact=false'
 
@@ -70,8 +68,6 @@ try:
 except:
     print("Login prompt not closed correctly...")
     pass
-
-
 
 
 # Scroll down to load all results
@@ -91,6 +87,7 @@ for i in range(MAX_SCROLLS):
         new_height = int(browser.execute_script("return document.body.scrollHeight"))
         print("Scroller successful:", new_height)
         last_height = new_height
+        time.sleep(100)
 
     except TimeoutException:
         print("No further increase in scrollHeight. Stopping.")
@@ -99,16 +96,12 @@ for i in range(MAX_SCROLLS):
 print("Finished Scrolling...")
 
 
-
-
 # Retrieve the HTML
 html = browser.page_source
 
 soup = BeautifulSoup(html, 'html.parser')
 
 browser.close()
-
-
 
 
 # Find link elements
@@ -129,8 +122,6 @@ for product_link in product_links:
         continue
     text = '\n'.join(product_link.stripped_strings)
     product_data.append({'url': url, 'text': text})
-
-
 
 
 # Create an empty list to store product data
@@ -167,8 +158,4 @@ for item in product_data:
         'url': re.sub(r'\?.*', '', item['url'])
     })
 
-
-
-
 print(extracted_data)
-
